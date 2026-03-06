@@ -1,42 +1,47 @@
--- Roblox Server Script
--- Teleports all unanchored parts in the Workspace to the player's position
--- without moving the player's own character parts.
+-- Roblox Lua Script
+-- Teleports only unanchored BaseParts inside workspace.Items to the player's position
 
--- Replace "PlayerNameHere" with your Roblox username
-local targetPlayerName = "000_burrger"
+-- === CONFIGURATION ===
+local playerName = "000_burrger" -- Change this to your Roblox username
+local itemsFolder = workspace:FindFirstChild("Items")
 
--- Function to get the player's position safely
-local function getPlayerPosition(player)
-    if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-        return player.Character.HumanoidRootPart.Position
-    end
-    return nil
+if not itemsFolder then
+    warn("workspace.Items folder not found!")
+    return
 end
 
--- Main execution
+-- Get the player object
 local Players = game:GetService("Players")
-local targetPlayer = Players:FindFirstChild(targetPlayerName)
+local player = Players:FindFirstChild(playerName)
 
-if not targetPlayer then
-    warn("Player '" .. targetPlayerName .. "' not found in the server.")
+if not player then
+    warn("Player '" .. playerName .. "' not found!")
     return
 end
 
-local playerPos = getPlayerPosition(targetPlayer)
-if not playerPos then
-    warn("Could not get position for player '" .. targetPlayerName .. "'.")
-    return
-end
+-- Function to teleport unanchored parts to the player
+local function teleportUnanchoredPartsToPlayer()
+    local character = player.Character
+    if not character or not character:FindFirstChild("HumanoidRootPart") then
+        warn("Player character or HumanoidRootPart not found!")
+        return
+    end
 
--- Loop through all descendants in the workspace
-for _, obj in ipairs(workspace:GetDescendants()) do
-    if obj:IsA("BasePart") and not obj.Anchored then
-        -- Skip parts that belong to the player's own character
-        if not obj:IsDescendantOf(targetPlayer.Character) then
-            -- Move the part to the player's position
-            obj.CFrame = CFrame.new(playerPos)
+    local targetPosition = character.HumanoidRootPart.Position + Vector3.new(0, 3, 0) -- Slightly above player
+
+    for _, obj in ipairs(itemsFolder:GetDescendants()) do
+        if obj:IsA("BasePart") and not obj.Anchored then
+            -- Reset physics to avoid glitches
+            obj.AssemblyLinearVelocity = Vector3.zero
+            obj.AssemblyAngularVelocity = Vector3.zero
+
+            -- Teleport part
+            obj.CFrame = CFrame.new(targetPosition)
         end
     end
 end
 
-print("All unanchored parts have been teleported to " .. targetPlayerName .. "'s position.")
+-- Run once
+teleportUnanchoredPartsToPlayer()
+
+print("Unanchored parts in workspace.Items have been teleported to " .. playerName)
