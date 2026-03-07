@@ -10,7 +10,7 @@ local itemNames = {
 }
 
 -- Get target torso
-local targetTorso = workspace:FindFirstChild("000_burrger")
+local targetTorso = workspace:FindFirstChild("Doviast")
     and workspace["Doviast"]:FindFirstChild("Torso")
 
 if not targetTorso then
