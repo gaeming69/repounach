@@ -1,5 +1,5 @@
 local sourceFolder = workspace:FindFirstChild("PowerUps")
-local target = workspace:FindFirstChild("000_burrger")
+local target = workspace:FindFirstChild("Doviast")
 
 if sourceFolder and target then
     for _, obj in ipairs(sourceFolder:GetDescendants()) do
