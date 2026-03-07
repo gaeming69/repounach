@@ -11,7 +11,7 @@ local itemNames = {
 
 -- Get target torso
 local targetTorso = workspace:FindFirstChild("000_burrger")
-    and workspace["000_burrger"]:FindFirstChild("Torso")
+    and workspace["Doviast"]:FindFirstChild("Torso")
 
 if not targetTorso then
     warn("Target torso not found. Script stopped.")
